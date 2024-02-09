@@ -1,0 +1,52 @@
+:root {
+  --blue: #3b82f6;
+  --red: #f87171;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: sans-serif;
+}
+.name {
+  text-align: center;
+}
+.game {
+  display: grid;
+  grid-template-columns: 550px 550px;
+  justify-content: center;
+}
+.player_board {
+  padding: 20px;
+  display: grid;
+  width: 440px;
+  background-color: var(--blue);
+  grid-template-columns: repeat(10, 45px);
+  border-radius: 20px;
+}
+.computer_board {
+  border-radius: 20px;
+  padding: 20px;
+  display: grid;
+  width: 440px;
+  background-color: var(--red);
+  grid-column-start: 2;
+  grid-row-start: 1;
+  grid-template-columns: repeat(10, 45px);
+}
+.message {
+  grid-column-start: 1;
+  grid-row-start: 2;
+  text-align: center;
+}
+.message_opponent {
+  grid-column-start: 2;
+  grid-row-start: 2;
+  text-align: center;
+}
+.square {
+  width: 40px;
+  height: 40px;
+  background-color: white;
+  margin-bottom: 5px;
+  border: 1px solid black;
+  border-radius: 10px;
+}
