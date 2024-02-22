@@ -52,10 +52,16 @@ button {
   font-size: 20px;
   padding: 10px;
   border-radius: 10px;
-  width: 100px;
+  width: 120px;
   background-color: white;
   border: 1px solid black;
   cursor: pointer;
+}
+.computer-ship {
+  background-color: var(--red);
+}
+.player_ship {
+  background-color: var(--blue);
 }
 button:hover {
   background-color: #ccc;
