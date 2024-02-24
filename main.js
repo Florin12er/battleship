@@ -121,4 +121,5 @@ playButton.addEventListener("click", () => {
   alert("Game started");
   createGrid(playerBoard);
   createGrid(computerBoard);
+  playButton.style.display = "none";
 });

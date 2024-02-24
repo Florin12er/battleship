@@ -57,7 +57,7 @@ button {
   border: 1px solid black;
   cursor: pointer;
 }
-.computer-ship {
+.computer_ship {
   background-color: var(--red);
 }
 .player_ship {
