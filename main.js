@@ -1,5 +1,14 @@
+function displayRules() {
+  alert(
+    "The objective of the game is to sink all of your opponent's ships before they sink yours.\n" +
+      "Press play to start the game and press vertical to change the direction of the ships.\n",
+  );
+}
+window.addEventListener("load", displayRules);
+
 const numberOfRows = 10;
 let game = 0;
+let computerGame = 0;
 let stop = 1;
 let vertical = false;
 const playerShips = [];
@@ -12,14 +21,27 @@ const playButton = document.getElementById("playButton");
 const message = document.getElementById("message");
 const message_opponent = document.getElementById("message_opponent");
 
-function createGrid(board) {
+function createGridPlayer(board) {
   for (let i = 0; i < numberOfRows; i++) {
     for (let j = 0; j < numberOfRows; j++) {
       const square = document.createElement("div");
-      square.classList.add("square");
+      square.classList.add("player");
       square.dataset.x = i;
       square.dataset.y = j;
       square.addEventListener("click", handleSquareClick);
+      board.appendChild(square);
+    }
+  }
+}
+
+function createGridComputer(board) {
+  for (let i = 0; i < numberOfRows; i++) {
+    for (let j = 0; j < numberOfRows; j++) {
+      const square = document.createElement("div");
+      square.classList.add("computer");
+      square.dataset.x = i;
+      square.dataset.y = j;
+      square.addEventListener("click", enemyClick);
       board.appendChild(square);
     }
   }
@@ -31,6 +53,15 @@ function createPlayerShips(shipCoordinates) {
     const square = playerBoard.children[index];
     square.classList.add("player-ship");
     playerShips.push([x, y]);
+  }
+}
+
+function createComputerShip(shipCoordinates) {
+  for (let [x, y] of shipCoordinates) {
+    const index = x * 10 + y;
+    const square = computerBoard.children[index];
+    square.classList.add("computer-ship");
+    computerShips.push([x, y]);
   }
 }
 
@@ -54,6 +85,12 @@ verticalButton.addEventListener("click", () => {
   verticalButton.textContent = vertical ? "horizontal" : "vertical";
 });
 
+let shipPlacementAllowed = true; // Flag to control ship placement
+
+function enemyClick() {
+  if (!shipPlacementAllowed) return; // Stop ship placement if not allowed
+}
+
 message.textContent = "Place your one square ship";
 
 function handleSquareClick(event) {
@@ -61,7 +98,6 @@ function handleSquareClick(event) {
   const y = parseInt(event.target.dataset.y);
 
   let shipCoordinates = [[x, y]]; // Start with one square ship
-
   const ships = [
     [[x, y]],
     [
@@ -117,9 +153,54 @@ function handleSquareClick(event) {
   createPlayerShips(shipCoordinates);
   game++;
 }
+
 playButton.addEventListener("click", () => {
+  // Generate and place enemy ships
+  const shipConfigurations = [
+    { size: 1, count: 4 },
+    { size: 2, count: 1 },
+    { size: 3, count: 1 },
+    { size: 4, count: 1 },
+  ];
+
   alert("Game started");
-  createGrid(playerBoard);
-  createGrid(computerBoard);
+  createGridPlayer(playerBoard);
+  createGridComputer(computerBoard);
+  shipConfigurations.forEach((config) => {
+    for (let i = 0; i < config.count; i++) {
+      let randomX, randomY;
+      do {
+        randomX = Math.floor(Math.random() * 10);
+        randomY = Math.floor(Math.random() * (10 - config.size + 1)); // Adjust randomY to prevent overlapping
+      } while (isShipOverlap(randomX, randomY, config.size));
+
+      let shipCoordinates = [];
+      if (vertical) {
+        for (let j = 0; j < config.size; j++) {
+          shipCoordinates.push([randomX + j, randomY]);
+        }
+      } else {
+        for (let j = 0; j < config.size; j++) {
+          shipCoordinates.push([randomX, randomY + j]);
+        }
+      }
+
+      createComputerShip(shipCoordinates);
+    }
+  });
   playButton.style.display = "none";
 });
+
+// Function to check if the ship overlaps with existing ships or is adjacent to them
+function isShipOverlap(startX, startY, size) {
+  for (let i = startX - 1; i <= startX + size; i++) {
+    for (let j = startY - 1; j <= startY + 1; j++) {
+      if (i >= 0 && i < 10 && j >= 0 && j < 10) {
+        if (computerShips.some((coord) => coord[0] === i && coord[1] === j)) {
+          return true;
+        }
+      }
+    }
+  }
+  return false;
+}
