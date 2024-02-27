@@ -1,9 +1,16 @@
+const rules = document.querySelector(".game-info");
+const overlay = document.querySelector(".overlay");
+
 function displayRules() {
-  alert(
-    "The objective of the game is to sink all of your opponent's ships before they sink yours.\n" +
-      "Press play to start the game and press vertical to change the direction of the ships.\n",
-  );
+  overlay.style.display = "block"; // Show the overlay
+  rules.style.display = "block"; // Show the modal
 }
+
+// Close the modal when clicking on the overlay
+overlay.addEventListener("click", function () {
+  overlay.style.display = "none";
+  rules.style.display = "none";
+});
 window.addEventListener("load", displayRules);
 
 const numberOfRows = 10;
@@ -153,6 +160,10 @@ function handleSquareClick(event) {
   createPlayerShips(shipCoordinates);
   game++;
 }
+function closeRules() {
+  overlay.style.display = "none"; // Hide the overlay
+  rules.style.display = "none"; // Hide the modal
+}
 
 playButton.addEventListener("click", () => {
   // Generate and place enemy ships
@@ -163,7 +174,6 @@ playButton.addEventListener("click", () => {
     { size: 4, count: 1 },
   ];
 
-  alert("Game started");
   createGridPlayer(playerBoard);
   createGridComputer(computerBoard);
   shipConfigurations.forEach((config) => {
@@ -188,7 +198,7 @@ playButton.addEventListener("click", () => {
       createComputerShip(shipCoordinates);
     }
   });
-  playButton.style.display = "none";
+  closeRules();
 });
 
 // Function to check if the ship overlaps with existing ships or is adjacent to them
